@@ -7,7 +7,7 @@ const Product = db.products;
 
 // Checkout function
 exports.checkout = async (req, res) => {
-  const { amount, description, email, productItems, quantity } = req.body;
+  const { amount, description, email, productItems, quantity, first_name, last_name, profession, company } = req.body;
 
   if (quantity > 2) {
     return res.status(400).json({ message: "Maximum quantity exceeded" });
@@ -43,6 +43,10 @@ exports.checkout = async (req, res) => {
           state: "pending",
           priceId: price.id,
           email: email,
+          first_name: first_name, 
+          last_name: last_name,
+          profession: profession,
+          company: company
         }
       );
     });

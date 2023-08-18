@@ -15,7 +15,10 @@ module.exports = mongoose => {
       email: {
         type: String,
       },
-      full_name: {
+      first_name: {
+        type: String,
+      },
+      last_name: {
         type: String,
       },
       profession: {
