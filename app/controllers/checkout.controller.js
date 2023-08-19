@@ -7,7 +7,7 @@ const Product = db.products;
 exports.checkout = async (req, res) => {
   const { amount, email, productItems, first_name, last_name, profession, company } = req.body;
 
-  items_count = productItems.length;
+  const items_count = productItems.length;
   console.log(items_count)
   if (items_count > 2) {
     return res.status(400).json({ message: "Maximum count of items exceeded" });
