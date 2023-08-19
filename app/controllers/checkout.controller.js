@@ -13,7 +13,6 @@ exports.checkout = async (req, res) => {
     return res.status(400).json({ message: "Maximum count of items exceeded" });
   }
   try {
-
     const price = await stripe.prices.create({
       unit_amount: amount*100*items_count,
       currency: 'usd',
