@@ -1,7 +1,5 @@
 require("dotenv").config();
-const stripe = require("stripe")(
-  "sk_test_51NgVL0FbsbpVf6Z3tmjZk6QX4M6b8rSQvLWY16onxQNFanK3odjfMc23eB0QVWa07Sp0urvyKbKh4spD7PO0P7Jr00r0nZbeTK"
-);
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const db = require("../models");
 const Product = db.products;
 
