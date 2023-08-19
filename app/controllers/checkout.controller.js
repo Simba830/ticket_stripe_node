@@ -7,15 +7,16 @@ const Product = db.products;
 exports.checkout = async (req, res) => {
   const { amount, email, productItems, first_name, last_name, profession, company } = req.body;
 
-  quantity = productItems.length;
+  count = productItems.length;
+  amount = amount * count;
 
-  if (quantity > 2) {
+  if (count > 2) {
     return res.status(400).json({ message: "Maximum quantity exceeded" });
   }
   try {
 
     const price = await stripe.prices.create({
-      unit_amount: amount*100*quantity,
+      unit_amount: amount*100,
       currency: 'usd',
       product: process.env.PRODUCT_ID,
     });
