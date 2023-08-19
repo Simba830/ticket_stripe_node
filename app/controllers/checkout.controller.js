@@ -5,26 +5,18 @@ const Product = db.products;
 
 // Checkout function
 exports.checkout = async (req, res) => {
-  const {
-    amount,
-    email,
-    productItems,
-    first_name,
-    last_name,
-    profession,
-    company,
-  } = req.body;
+  const { amount, email, productItems, first_name, last_name, profession, company } = req.body;
 
-  count = productItems.length;
-  amount = amount * count;
-
-  if (count > 2) {
-    return res.status(400).json({ message: "Maximum quantity exceeded" });
+  items_count = productItems.length;
+  console.log(items_count)
+  if (items_count > 2) {
+    return res.status(400).json({ message: "Maximum count of items exceeded" });
   }
   try {
+
     const price = await stripe.prices.create({
-      unit_amount: amount * 100,
-      currency: "usd",
+      unit_amount: amount*100*items_count,
+      currency: 'usd',
       product: process.env.PRODUCT_ID,
     });
     // Perform necessary operations for checkout, such as calculating total price and creating Stripe payment intent
@@ -32,7 +24,9 @@ exports.checkout = async (req, res) => {
       // For each item use the id to get it's information
       // Take that information and convert it to Stripe's format
       customer_email: email,
-      line_items: [{ price: price.id, quantity: 1 }],
+      line_items: [
+        {price: price.id, quantity: 1},
+      ],
       mode: "payment",
       // Set a success and cancel URL we will send customers to
       // These must be full URLs
@@ -48,10 +42,10 @@ exports.checkout = async (req, res) => {
           state: "pending",
           priceId: price.id,
           email: email,
-          first_name: first_name,
+          first_name: first_name, 
           last_name: last_name,
           profession: profession,
-          company: company,
+          company: company
         }
       );
     });
