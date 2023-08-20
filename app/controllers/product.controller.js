@@ -4,14 +4,15 @@ const Product = db.products;
 // Create and Save a new Product
 exports.create = (req, res) => {
   // Validate request
-  // if (!req.body.id) {
-  //   res.status(400).send({ message: "Content can not be empty!" });
-  //   return;
-  // }
+  if (!req.body.key_id) {
+    res.status(400).send({ message: "Content can not be empty!" });
+    return;
+  }
 
   // Create a Product
   const product = new Product({
-      ordered: req.body.ordered ? req.body.ordered : false
+    product_key: req.body.key_id,
+    ordered: req.body.ordered ? req.body.ordered : false
   });
   
 

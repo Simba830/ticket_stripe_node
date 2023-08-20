@@ -65,7 +65,7 @@ exports.checkout = async (req, res) => {
 
     // productItems.map(async (item, index) => {
     //   await Product.updateOne(
-    //     { productId: item },
+    //     { product_key: item },
     //     {
     //       state: "pending",
     //       priceId: price.id,
@@ -110,6 +110,7 @@ exports.webhook = async (req, res) => {
       break;
     case 'checkout.session.async_payment_succeeded':
       const checkoutSessionAsyncPaymentSucceeded = event.data.object;
+
       // Then define and call a function to handle the event checkout.session.async_payment_succeeded
       break;
     case 'checkout.session.completed':

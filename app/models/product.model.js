@@ -1,8 +1,12 @@
-const { v4: uuidv4 } = require('uuid');
+const { v4: uuidv4 } = require("uuid");
 
-module.exports = mongoose => {
+module.exports = (mongoose) => {
   var product_schema = new mongoose.Schema(
-    { 
+    {
+      product_key: {
+        type: Number,
+        unique: true,
+      },
       productId: {
         type: String,
         default: uuidv4,
@@ -37,7 +41,7 @@ module.exports = mongoose => {
     { timestamps: true }
   );
 
-  product_schema.method("toJSON", function() {
+  product_schema.method("toJSON", function () {
     const { __v, _id, ...object } = this.toObject();
     object.id = _id;
     return object;
