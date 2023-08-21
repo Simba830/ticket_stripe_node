@@ -1,3 +1,3 @@
 module.exports = {
-  url: "mongodb://0.0.0.0:27017/product_db"
+  url: "mongodb+srv://alex_h:i536dOFi7xUw5Xpz@cluster0.dwdjpdp.mongodb.net/?retryWrites=true&w=majority",
 };

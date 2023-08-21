@@ -3,7 +3,7 @@ const { v4: uuidv4 } = require("uuid");
 module.exports = (mongoose) => {
   var product_schema = new mongoose.Schema(
     {
-      product_key: {
+      key_id: {
         type: Number,
         unique: true,
       },
@@ -35,6 +35,9 @@ module.exports = (mongoose) => {
         type: String,
       },
       priceId: {
+        type: String,
+      },
+      sessionID: {
         type: String,
       },
     },

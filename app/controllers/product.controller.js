@@ -8,24 +8,22 @@ exports.create = (req, res) => {
     res.status(400).send({ message: "Content can not be empty!" });
     return;
   }
-
   // Create a Product
   const product = new Product({
-    product_key: req.body.key_id,
-    ordered: req.body.ordered ? req.body.ordered : false
+    ordered: req.body.ordered ? req.body.ordered : false,
+    key_id: req.body.key_id,
   });
-  
 
   // Save Product in the database
   product
     .save(product)
-    .then(data => {
+    .then((data) => {
       res.send(data);
     })
-    .catch(err => {
+    .catch((err) => {
       res.status(500).send({
         message:
-          err.message || "Some error occurred while creating the Product."
+          err.message || "Some error occurred while creating the Product.",
       });
     });
 };
@@ -36,13 +34,13 @@ exports.findAll = (req, res) => {
   var condition = id ? { id: { $regex: new RegExp(id), $options: "i" } } : {};
 
   Product.find(condition)
-    .then(data => {
+    .then((data) => {
       res.send(data);
     })
-    .catch(err => {
+    .catch((err) => {
       res.status(500).send({
         message:
-          err.message || "Some error occurred while retrieving products."
+          err.message || "Some error occurred while retrieving products.",
       });
     });
 };
@@ -51,13 +49,13 @@ exports.findAll = (req, res) => {
 exports.findOne = (req, res) => {
   const id = req.params.id;
 
-  Product.findOne({ productId: id })
-    .then(data => {
+  Product.findOne({ key_id: id })
+    .then((data) => {
       if (!data)
         res.status(404).send({ message: "Not found Product with id " + id });
       else res.send(data);
     })
-    .catch(err => {
+    .catch((err) => {
       res
         .status(500)
         .send({ message: "Error retrieving Product with id=" + id });
@@ -68,23 +66,25 @@ exports.findOne = (req, res) => {
 exports.update = (req, res) => {
   if (!req.body) {
     return res.status(400).send({
-      message: "Data to update can not be empty!"
+      message: "Data to update can not be empty!",
     });
   }
 
   const id = req.params.id;
 
-  Product.findOneAndUpdate( {productId: id}, req.body, { useFindAndModify: false })
-    .then(data => {
+  Product.findOneAndUpdate({ key_id: id }, req.body, {
+    useFindAndModify: false,
+  })
+    .then((data) => {
       if (!data) {
         res.status(404).send({
-          message: `Cannot update Product with id=${id}. Maybe Product was not found!`
+          message: `Cannot update Product with id=${id}. Maybe Product was not found!`,
         });
       } else res.send({ message: "Product was updated successfully." });
     })
-    .catch(err => {
+    .catch((err) => {
       res.status(500).send({
-        message: "Error updating Product with id=" + id
+        message: "Error updating Product with id=" + id,
       });
     });
 };
@@ -93,22 +93,22 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
   const id = req.params.id;
 
-  Product.findOneAndRemove({ productId: id }, { useFindAndModify: false })
-    .then(data => {
+  Product.findOneAndRemove({ key_id: id }, { useFindAndModify: false })
+    .then((data) => {
       if (!data) {
         res.status(404).send({
-          message: `Cannot delete Product with id=${id}. Maybe Product was not found!`
+          message: `Cannot delete Product with id=${id}. Maybe Product was not found!`,
         });
       } else {
         res.send({
-          message: "Product was deleted successfully!"
+          message: "Product was deleted successfully!",
         });
       }
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
       res.status(500).send({
-        message: "Could not delete Product with id=" + id
+        message: "Could not delete Product with id=" + id,
       });
     });
 };
@@ -116,15 +116,15 @@ exports.delete = (req, res) => {
 // Delete all Products from the database.
 exports.deleteAll = (req, res) => {
   Product.deleteMany({})
-    .then(data => {
+    .then((data) => {
       res.send({
-        message: `${data.deletedCount} Products were deleted successfully!`
+        message: `${data.deletedCount} Products were deleted successfully!`,
       });
     })
-    .catch(err => {
+    .catch((err) => {
       res.status(500).send({
         message:
-          err.message || "Some error occurred while removing all products."
+          err.message || "Some error occurred while removing all products.",
       });
     });
 };
@@ -132,26 +132,24 @@ exports.deleteAll = (req, res) => {
 // Find all ordered Products
 exports.findAllOrdered = (req, res) => {
   Product.find({ ordered: true })
-    .then(data => {
+    .then((data) => {
       res.send(data);
     })
-    .catch(err => {
+    .catch((err) => {
       res.status(500).send({
-        message:
-          err.message || "Some error occurred while ordered products."
+        message: err.message || "Some error occurred while ordered products.",
       });
     });
 };
 
 exports.findAllRemainingTickets = (req, res) => {
   Product.find({ ordered: false })
-    .then(data => {
+    .then((data) => {
       res.send(data);
     })
-    .catch(err => {
+    .catch((err) => {
       res.status(500).send({
-        message:
-          err.message || "Some error occurred while remaining products."
+        message: err.message || "Some error occurred while remaining products.",
       });
     });
 };
