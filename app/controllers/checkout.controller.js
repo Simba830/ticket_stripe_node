@@ -28,9 +28,15 @@ const sendEmail = async (to, subject, text) => {
 };
 // Checkout function
 exports.checkout = async (req, res) => {
-  const { email, productItems, first_name, last_name, profession, company } =
-    req.body;
-  const amount = 100;
+  const {
+    amount,
+    email,
+    productItems,
+    first_name,
+    last_name,
+    profession,
+    company,
+  } = req.body;
   const items_count = productItems ? productItems.length : 0;
 
   if (items_count > 2) {
@@ -106,15 +112,21 @@ exports.webhook = async (req, res) => {
           ordered: true,
         }
       );
-      const emailData = await Product.findOne({
+      const emailData = await Product.find({
         sessionID: data.data.object.id,
       });
 
-      // Send an email using SendGrid
-      const email = emailData.email;
+      console.log(emailData);
+
+      const temp = emailData.map((item, index) => {
+        return item.key_id;
+      });
+
+      email = emailData[0].email;
+
       const subject = "Payment Success";
-      const text = "Your payment was successful. Thank you!";
-      await sendEmail(email, subject, text);
+      const text = `${temp} ticket successfully purchased. Thank you!`;
+      await sendEmail(email, subject, text, temp);
       // Then define and call a function to handle the event checkout.session.completed
       break;
     // ... handle other event types
