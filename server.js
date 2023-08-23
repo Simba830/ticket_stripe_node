@@ -3,11 +3,11 @@ const cors = require("cors");
 const app = express();
 
 var corsOptions = {
-  origin: "http://localhost:8081",
+  origin: "http://localhost:8080",
 };
 
 app.use(cors(corsOptions));
-require('dotenv').config();
+require("dotenv").config();
 // parse requests of content-type - application/json
 app.use(express.json());
 
@@ -28,7 +28,7 @@ db.mongoose
 // const product_router = require("./app/routes/product.routes");
 const router = require("./app/routes/index");
 // Moved this line before using the router
-app.use('/api', router);
+app.use("/api", router);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;

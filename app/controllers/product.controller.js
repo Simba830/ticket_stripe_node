@@ -1,39 +1,96 @@
 const db = require("../models");
+const { v4: uuidv4 } = require("uuid");
 const Product = db.products;
 
 // Create and Save a new Product
 exports.create = (req, res) => {
+  const { key_id } = req.body;
+  console.log(key_id);
   // Validate request
-  if (!req.body.key_id) {
+  if (!key_id) {
     res.status(400).send({ message: "Content can not be empty!" });
     return;
   }
   // Create a Product
-  const product = new Product({
-    ordered: req.body.ordered ? req.body.ordered : false,
-    key_id: req.body.key_id,
-  });
-
-  // Save Product in the database
-  product
-    .save(product)
+  let uuid = uuidv4();
+  console.log(uuid);
+  Product.updateOne(
+    { key_id: { $in: key_id } },
+    {
+      $set: {
+        productId: uuid,
+        isDeleted: false,
+        email: "",
+        ordered: false,
+        first_name: "",
+        last_name: "",
+        profession: "",
+        company: "",
+        priceID: "",
+        sessionID: "",
+        state: "",
+      },
+    },
+    { upsert: true, new: true }
+  )
     .then((data) => {
       res.send(data);
     })
-    .catch((err) => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while creating the Product.",
-      });
+    .catch((error) => {
+      console.error(error);
+    });
+};
+
+exports.add = (req, res) => {
+  const { idsToAdd } = req.body;
+  console.log(idsToAdd);
+  const uuid = uuidv4();
+  Product.updateMany(
+    { key_id: { $in: idsToAdd } },
+    {
+      $set: {
+        productId: uuid,
+        isDeleted: false,
+        email: "",
+        ordered: false,
+        first_name: "",
+        last_name: "",
+        profession: "",
+        company: "",
+        priceID: "",
+        sessionID: "",
+        state: "",
+      },
+    },
+    { upsert: true, new: true }
+  )
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+};
+
+exports.findDeleted = (req, res) => {
+  Product.find({ isDeleted: true })
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((error) => {
+      console.error(error);
     });
 };
 
 // Retrieve all Products from the database.
 exports.findAll = (req, res) => {
-  const id = req.query.id;
-  var condition = id ? { id: { $regex: new RegExp(id), $options: "i" } } : {};
+  // const id = req.query.id;
+  // var condition = id
+  //   ? { id: { $regex: new RegExp(id), $options: "i" } }
+  //   : { isDeleted: false };
 
-  Product.find(condition)
+  // Product.find(condition)
+  Product.find({ isDeleted: false })
     .then((data) => {
       res.send(data);
     })
@@ -92,8 +149,8 @@ exports.update = (req, res) => {
 // Delete a Product with the specified id in the request
 exports.delete = (req, res) => {
   const id = req.params.id;
-
-  Product.findOneAndRemove({ key_id: id }, { useFindAndModify: false })
+  console.log("id", id);
+  Product.updateOne({ key_id: id }, { $set: { isDeleted: true } })
     .then((data) => {
       if (!data) {
         res.status(404).send({
@@ -115,7 +172,7 @@ exports.delete = (req, res) => {
 
 // Delete all Products from the database.
 exports.deleteAll = (req, res) => {
-  Product.deleteMany({})
+  Product.updateMany({ $set: { isDeleted: true } })
     .then((data) => {
       res.send({
         message: `${data.deletedCount} Products were deleted successfully!`,
@@ -131,7 +188,7 @@ exports.deleteAll = (req, res) => {
 
 // Find all ordered Products
 exports.findAllOrdered = (req, res) => {
-  Product.find({ ordered: true })
+  Product.find({ ordered: true, isDeleted: false })
     .then((data) => {
       res.send(data);
     })
@@ -143,7 +200,7 @@ exports.findAllOrdered = (req, res) => {
 };
 
 exports.findAllRemainingTickets = (req, res) => {
-  Product.find({ ordered: false })
+  Product.find({ ordered: false, isDeleted: false })
     .then((data) => {
       res.send(data);
     })

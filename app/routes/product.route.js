@@ -5,15 +5,19 @@ var router = require("express").Router();
 // Create a new Product
 
 const authMiddleware = require("../middleware/authmiddleware.js");
-router.post("/create", authMiddleware, products.create);
+router.put("/create", authMiddleware, products.create);
+
+router.put("/add", authMiddleware, products.add);
+
+router.get("/deleted_tickets", products.findDeleted);
 
 // Retrieve all products
-router.get("/", authMiddleware, products.findAll);
+router.get("/", products.findAll);
 
 // Retrieve all ordered products
-router.get("/ordered_tickets", authMiddleware, products.findAllOrdered);
+router.get("/ordered_tickets", products.findAllOrdered);
 
-router.get("/remain_tickets", authMiddleware, products.findAllRemainingTickets);
+router.get("/remain_tickets", products.findAllRemainingTickets);
 
 // Retrieve a single Product with id
 router.get("/:id", authMiddleware, products.findOne);
