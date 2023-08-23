@@ -70,6 +70,7 @@ exports.checkout = async (req, res) => {
         { key_id: item },
         {
           state: "pending",
+          ordered: true,
           priceId: price.id,
           email: email,
           first_name: first_name,
@@ -109,7 +110,6 @@ exports.webhook = async (req, res) => {
         { sessionID: data.data.object.id },
         {
           state: "success",
-          ordered: true,
         }
       );
       const emailData = await Product.find({

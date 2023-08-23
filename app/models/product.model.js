@@ -28,7 +28,7 @@ module.exports = (mongoose) => {
       profession: {
         type: String,
       },
-      Company: {
+      company: {
         type: String,
       },
       state: {

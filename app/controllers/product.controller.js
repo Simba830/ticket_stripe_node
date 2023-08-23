@@ -26,7 +26,7 @@ exports.create = (req, res) => {
         last_name: "",
         profession: "",
         company: "",
-        priceID: "",
+        priceId: "",
         sessionID: "",
         state: "",
       },
